@@ -1,37 +1,36 @@
-const productos = [
-    {
-        nombre:"producto 1",
-        precio:200,
+const productos = [{
+        nombre: "producto 1",
+        precio: 200,
         id: 1
     },
     {
-        nombre:"producto 2",
-        precio:1200,
+        nombre: "producto 2",
+        precio: 1200,
         id: 3
     },
     {
-        nombre:"producto 3",
-        precio:10,
+        nombre: "producto 3",
+        precio: 10,
         id: 4
     },
     {
-        nombre:"producto 4",
-        precio:500,
+        nombre: "producto 4",
+        precio: 500,
         id: 5
     },
     {
-        nombre:"producto 5",
-        precio:700,
+        nombre: "producto 5",
+        precio: 700,
         id: 6
     },
     {
-        nombre:"producto 6",
-        precio:900,
+        nombre: "producto 6",
+        precio: 900,
         id: 7
     },
     {
-        nombre:"producto 7",
-        precio:6600,
+        nombre: "producto 7",
+        precio: 6600,
         id: 8
     },
 ]
@@ -41,8 +40,8 @@ const carritoDiv = document.querySelector(".carrito");
 let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
 
-function crearCards(){
-    productos.forEach(prod=>{
+function crearCards() {
+    productos.forEach(prod => {
         containerDiv.innerHTML += `<div class= "d-inline-block m-2 bg-success p-4 border-dark">
         <h4>${prod.nombre}</h4>
         <p>$${prod.precio}</p>
@@ -54,9 +53,9 @@ function crearCards(){
 
 
 
-function agregarFuncionabilidad(){
-    productos.forEach(prod=>{
-        document.querySelector(`#btn-agregar${prod.id}`).addEventListener("click",()=>{
+function agregarFuncionabilidad() {
+    productos.forEach(prod => {
+        document.querySelector(`#btn-agregar${prod.id}`).addEventListener("click", () => {
             console.log(prod)
             agregarAlCarrito(prod)
         })
@@ -64,9 +63,9 @@ function agregarFuncionabilidad(){
 
 }
 
-function agregarAlCarrito(prod){
-    let existe = carrito.some(productoSome=>productoSome.id === prod.id)
-    if(existe === false){
+function agregarAlCarrito(prod) {
+    let existe = carrito.some(productoSome => productoSome.id === prod.id)
+    if (existe === false) {
         prod.cantidad = 1
         carrito.push(prod);
     } else {
@@ -79,10 +78,10 @@ function agregarAlCarrito(prod){
     renderizarCarrito()
 }
 
-function renderizarCarrito(){
-    carritoDiv.innerHTML=``
-    carrito.forEach(prod=>{
-        carritoDiv.innerHTML +=`<div class= "d-inline-block m-2 bg-warning  p-4 border-dark">
+function renderizarCarrito() {
+    carritoDiv.innerHTML = ``
+    carrito.forEach(prod => {
+        carritoDiv.innerHTML += `<div class= "d-inline-block m-2 bg-warning  p-4 border-dark">
         <h4>${prod.nombre}</h4>
         <p>$${prod.precio}</p>
         <p>cantidad = ${prod.cantidad}</p>
@@ -92,34 +91,39 @@ function renderizarCarrito(){
         </div>
         `
     })
-    localStorage.setItem("carrito",JSON.stringify(carrito))
+    localStorage.setItem("carrito", JSON.stringify(carrito))
     borrarProducto()
-    // borrarUnidad()
+    borrarUnidad()
 }
 
-function borrarProducto(){
-    carrito.forEach(prod=>{
+function borrarProducto() {
+    carrito.forEach(prod => {
         document
-        .querySelector(`#btn-borrar${prod.id}`)
-        .addEventListener("click",()=>{
-        carrito = carrito.filter(
-            (productoFilter)=> productoFilter.id !== prod.id
-            );
-            renderizarCarrito();
-        });
+            .querySelector(`#btn-borrar${prod.id}`)
+            .addEventListener("click", () => {
+                carrito = carrito.filter(
+                    (productoFilter) => productoFilter.id !== prod.id
+                );
+                renderizarCarrito();
+            });
     });
 }
 
-    function borrarUnidad(){
-        carrito.forEach(prod =>{
-            document.querySelector(`#btn-menos${prod.id}`).addEventListener("click",()=>
-            {
-                carrito= carrito.find((productoEliminar)=> productoEliminar.id === prod.id)
-                carrito.cantidad--;
-            })
+function borrarUnidad() {
+    carrito.forEach(prod => {
+        document.querySelector(`#btn-menos${prod.id}`).addEventListener("click", () => {
+            let producto = carrito.find((productoEliminar) => productoEliminar.id === prod.id)
+            producto.cantidad--;
+            if (producto.cantidad < 1) {
+                carrito = carrito.filter(
+                    (productoFilter) => productoFilter.id !== prod.id);
+            }
+            renderizarCarrito()
         })
-        
-    }
+    })
+}
+
+
 
 crearCards();
 renderizarCarrito();
